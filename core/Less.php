@@ -45,7 +45,7 @@ class Less extends \lithium\core\StaticObject {
 		}
 
 		try {
-			$less = new \lessc($file);
+			$less = static::_getLess($file);
 			$output = $less->parse();
 		} catch(Exception $e) {
 			$output = "/* less compiler exception: {$e->getMessage()} */";
@@ -85,7 +85,7 @@ class Less extends \lithium\core\StaticObject {
 		}
 
 		try {
-			$less = new \lessc;
+			$less = static::_getLess();
 			$output = $less->parse($input);
 		} catch(Exception $e) {
 			header('Content-Type: text/css', true, 500);
@@ -110,7 +110,7 @@ class Less extends \lithium\core\StaticObject {
 	protected static function _prependHeader($output) {
 		$header = array(
 			'/**',
-			' * generated '.date('r'),
+			' * Automatically generated on '.date('r'),
 			' * by li3_less/lessphp',
 			' * ',
 			' * @link https://github.com/bruensicke/li3_less',
@@ -118,5 +118,17 @@ class Less extends \lithium\core\StaticObject {
 			' */'
 		);
 		return join(PHP_EOL, $header) . PHP_EOL . $output;
+	}
+
+	/**
+	 * Factory method for creating and configuring a new lessc instance.
+	 *
+	 * @param string $file File to create lessc instance with.
+	 * @return lessc
+	 */
+	protected static function _getLess($file = null) {
+		$less = new \lessc($file);
+		$less->importDir = LITHIUM_APP_PATH . '/webroot/less';
+		return $less;
 	}
 }

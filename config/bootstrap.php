@@ -11,6 +11,9 @@
 use lithium\action\Dispatcher;
 use lithium\core\Libraries;
 use lithium\storage\Cache;
+use lithium\action\Response;
+
+use li3_less\core\Less;
 
 Dispatcher::applyFilter('run', function($self, $params, $chain) {
 
